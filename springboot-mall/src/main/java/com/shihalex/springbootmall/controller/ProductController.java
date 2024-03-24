@@ -1,5 +1,6 @@
 package com.shihalex.springbootmall.controller;
 
+import com.shihalex.springbootmall.constant.ProductCategory;
 import com.shihalex.springbootmall.dto.ProductRequest;
 import com.shihalex.springbootmall.model.Product;
 import com.shihalex.springbootmall.service.ProductService;
@@ -10,11 +11,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search
+    ){
+        List<Product> productList = productService.getProducts(category, search);
+        return ResponseEntity.status(HttpStatus.OK).body(productList);
+    }
+
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId){
         Product product = productService.getProductById(productId);
