@@ -1,6 +1,7 @@
 package com.shihalex.springbootmall.service.impl;
 
 import com.shihalex.springbootmall.dao.UserDao;
+import com.shihalex.springbootmall.dto.UserLoginRequest;
 import com.shihalex.springbootmall.dto.UserRegisterRequest;
 import com.shihalex.springbootmall.model.User;
 import com.shihalex.springbootmall.service.UserService;
@@ -36,5 +37,22 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Integer userId) {
 
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        if (user == null){
+            log.warn("該 email {} 尚未註冊", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if(user.getPassword().equals(userLoginRequest.getPassword())){
+            return user;
+        }else{
+            log.warn("email {} 的密碼不正確", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }

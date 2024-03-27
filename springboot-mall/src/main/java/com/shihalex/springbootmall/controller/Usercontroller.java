@@ -1,5 +1,6 @@
 package com.shihalex.springbootmall.controller;
 
+import com.shihalex.springbootmall.dto.UserLoginRequest;
 import com.shihalex.springbootmall.dto.UserRegisterRequest;
 import com.shihalex.springbootmall.model.User;
 import com.shihalex.springbootmall.service.UserService;
@@ -23,5 +24,10 @@ public class Usercontroller {
         User user = userService.getUserById(userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+    @PostMapping("/users/login")
+    public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest){
+        User user = userService.login(userLoginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
